@@ -74,6 +74,11 @@
             <artifactId>jbpm-document</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.kie</groupId>
+            <artifactId>kie-spring</artifactId>
+            <version>${version.org.jbpm}</version>
+        </dependency>
+        <dependency>
             <groupId>org.jbpm</groupId>
             <artifactId>jbpm-flow-builder</artifactId>
         </dependency>
