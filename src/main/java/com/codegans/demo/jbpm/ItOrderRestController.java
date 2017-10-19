@@ -1,13 +1,15 @@
 package com.codegans.demo.jbpm;
 
-import org.kie.api.runtime.KieSession;
-import org.kie.api.runtime.manager.RuntimeEngine;
-import org.kie.api.runtime.process.ProcessInstance;
+import org.drools.core.command.runtime.process.StartProcessCommand;
+import org.jbpm.services.api.ProcessService;
+import org.jbpm.services.api.RuntimeDataService;
+import org.jbpm.services.api.model.ProcessDefinition;
+import org.kie.api.runtime.query.QueryContext;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Collection;
 
 /**
  * JavaDoc here
@@ -16,33 +18,24 @@ import java.util.Map;
  * @since 17.10.2017 10:06
  */
 @RestController
+@RequestMapping("/order")
 public class ItOrderRestController {
-//    private final KieBase knowledgeBase;
-    private final RuntimeEngine runtimeEngine;
+    private final RuntimeDataService runtimeDataService;
+    private final ProcessService processService;
 
-//    public ItOrderRestController(KieBase knowledgeBase) {
-//        this.knowledgeBase = knowledgeBase;
-//    }
-
-    public ItOrderRestController(RuntimeEngine runtimeEngine) {
-        this.runtimeEngine = runtimeEngine;
+    public ItOrderRestController(RuntimeDataService runtimeDataService, ProcessService processService) {
+        this.runtimeDataService = runtimeDataService;
+        this.processService = processService;
     }
 
-    @RequestMapping("/order/create")
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public Collection<ProcessDefinition> listProcesses() {
+        return runtimeDataService.getProcesses(new QueryContext(0, 100));
+
+    }
+
+    @RequestMapping("/create")
     public String create() {
-        Map<String,Object> data = new HashMap<>();
-
-//        KieSession session = knowledgeBase.newKieSession();
-        KieSession session = runtimeEngine.getKieSession();
-
-        try {
-            ProcessInstance processInstance = session.startProcess("itorders.orderhardware", data);
-
-            System.out.println(processInstance);
-        } finally {
-            session.dispose();
-        }
-        
-        return null;
+        return "Started " + processService.execute("", new StartProcessCommand("itorders.orderhardware"));
     }
 }
