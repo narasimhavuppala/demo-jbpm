@@ -1,24 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:util="http://www.springframework.org/schema/util"
-       xmlns:kie="http://drools.org/schema/kie-spring"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-           	               http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
-                           http://drools.org/schema/kie-spring http://drools.org/schema/kie-spring.xsd">
-
-    <util:properties id="roleProperties" location="classpath:/roles.properties"/>
-
-<!--
-    <kie:jpa-persistence>
-        <kie:entity-manager-factory ref="entityManagerFactory"/>
-        <kie:transaction-manager ref="transactionManager"/>
-    </kie:jpa-persistence>
-
-    <kie:kmodule id="mainModule">
-        <kie:kbase name="order" default="true" includes="bpmn/*.bpmn2.xml"/>
-    </kie:kmodule>
--->
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <bean id="userGroupCallback" class="org.jbpm.services.task.identity.JBossUserGroupCallbackImpl">
         <constructor-arg name="userGroups" ref="roleProperties"/>
@@ -29,6 +12,17 @@
     <bean id="runtimeManagerFactory" class="org.kie.spring.manager.SpringRuntimeManagerFactoryImpl">
         <property name="transactionManager" ref="transactionManager"/>
         <property name="userGroupCallback" ref="userGroupCallback"/>
+    </bean>
+
+    <bean id="runtimeManager" class="org.kie.spring.factorybeans.RuntimeManagerFactoryBean" destroy-method="close">
+        <property name="type" value="PER_REQUEST"/>
+        <property name="identifier" value="spring-rm"/>
+        <property name="runtimeEnvironment" ref="runtimeEnvironment"/>
+    </bean>
+
+    <bean id="logService" class="org.jbpm.process.audit.JPAAuditLogService">
+        <constructor-arg ref="entityManagerFactory"/>
+        <constructor-arg value="STANDALONE_LOCAL_SPRING_SHARED_EM"/>
     </bean>
 
     <bean id="identityProvider" class="com.codegans.demo.jbpm.util.SpringSecurityIdentityProvider"/>

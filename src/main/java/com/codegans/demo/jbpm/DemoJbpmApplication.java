@@ -27,7 +27,8 @@ import java.util.Collection;
 @ImportResource(value = {
         "classpath:config/jpa-context.xml",
         "classpath:config/jbpm-context.xml",
-        "classpath:config/security-context.xml"
+        "classpath:config/security-context.xml",
+        "classpath:config/asset-context.xml"
 })
 @SpringBootApplication
 public class DemoJbpmApplication {

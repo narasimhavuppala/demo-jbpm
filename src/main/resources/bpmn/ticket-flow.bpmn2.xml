@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns="http://www.omg.org/bpmn20"
+                   xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                   exporter="jBPM Designer"
+                   exporterVersion="6.2.0"
+                   expressionLanguage="http://www.mvel.org/2.0"
+                   targetNamespace="http://www.omg.org/bpmn20"
+                   typeLanguage="http://www.java.com/javaTypes">
+    
+</bpmn2:definitions>

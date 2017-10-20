@@ -6,11 +6,14 @@
     <persistence-unit name="org.jbpm.persistence.jpa" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <non-jta-data-source>java:comp/env/jdbc/jbpm</non-jta-data-source>
-
+        
         <mapping-file>META-INF/Servicesorm.xml</mapping-file>
         <mapping-file>META-INF/JBPMorm.xml</mapping-file>
         <mapping-file>META-INF/Taskorm.xml</mapping-file>
         <mapping-file>META-INF/TaskAuditorm.xml</mapping-file>
+
+        <class>com.codegans.demo.jbpm.model.Alarm</class>
+        <class>com.codegans.demo.jbpm.model.BusinessTransaction</class>
 
         <class>org.jbpm.persistence.processinstance.ProcessInstanceInfo</class>
         <class>org.drools.persistence.info.SessionInfo</class>
@@ -62,9 +65,11 @@
 
         <properties>
             <property name="hibernate.max_fetch_depth" value="3"/>
-            <property name="hibernate.hbm2ddl.auto" value="update"/>
+            <property name="hibernate.hbm2ddl.auto" value="create"/>
             <property name="hibernate.show_sql" value="false"/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
+            <property name="hibernate.implicit_naming_strategy" value="com.codegans.demo.jbpm.util.ImprovedSpringImplicitNamingStrategy"/>
+            <property name="hibernate.physical_naming_strategy" value="com.codegans.demo.jbpm.util.ImprovedSpringPhysicalNamingStrategy"/>
 
             <!-- BZ 841786: AS7/EAP 6/Hib 4 uses new (sequence) generators which seem to cause problems -->
             <property name="hibernate.id.new_generator_mappings" value="false"/>
