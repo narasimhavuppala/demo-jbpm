@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:util="http://www.springframework.org/schema/util"
-       xmlns="http://www.springframework.org/schema/beans"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
-           	               http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd">
+       xmlns:kie="http://drools.org/schema/kie-spring"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+           	               http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+                           http://drools.org/schema/kie-spring http://drools.org/schema/kie-spring.xsd">
 
     <util:properties id="roleProperties" location="classpath:/roles.properties"/>
+
+<!--
+    <kie:jpa-persistence>
+        <kie:entity-manager-factory ref="entityManagerFactory"/>
+        <kie:transaction-manager ref="transactionManager"/>
+    </kie:jpa-persistence>
+
+    <kie:kmodule id="mainModule">
+        <kie:kbase name="order" default="true" includes="bpmn/*.bpmn2.xml"/>
+    </kie:kmodule>
+-->
 
     <bean id="userGroupCallback" class="org.jbpm.services.task.identity.JBossUserGroupCallbackImpl">
         <constructor-arg name="userGroups" ref="roleProperties"/>
@@ -22,6 +35,7 @@
 
     <bean id="taskService" class="org.kie.spring.factorybeans.TaskServiceFactoryBean" destroy-method="close">
         <property name="entityManagerFactory" ref="entityManagerFactory"/>
+        <property name="entityManager" ref="entityManager"/>
         <property name="transactionManager" ref="transactionManager"/>
         <property name="userGroupCallback" ref="userGroupCallback"/>
         <property name="listeners">
@@ -34,7 +48,8 @@
     </bean>
 
     <bean id="transactionCmdService" class="org.jbpm.shared.services.impl.TransactionalCommandService">
-        <constructor-arg name="emf" ref="entityManagerFactory"/>
+        <constructor-arg type="javax.persistence.EntityManagerFactory" ref="entityManagerFactory"/>
+        <constructor-arg type="org.drools.persistence.api.TransactionManager" ref="kieTransactionManager"/>
     </bean>
 
     <bean id="runtimeDataService" class="org.jbpm.kie.services.impl.RuntimeDataServiceImpl">
@@ -43,7 +58,7 @@
         <property name="taskService" ref="taskService"/>
     </bean>
 
-    <bean id="deploymentService" class="org.jbpm.kie.services.impl.KModuleDeploymentService" depends-on="entityManagerFactory" init-method="onInit">
+    <bean id="deploymentService" class="org.jbpm.kie.services.impl.KModuleDeploymentService" init-method="onInit">
         <property name="bpmn2Service" ref="definitionService"/>
         <property name="emf" ref="entityManagerFactory"/>
         <property name="managerFactory" ref="runtimeManagerFactory"/>
@@ -51,22 +66,12 @@
         <property name="runtimeDataService" ref="runtimeDataService"/>
     </bean>
 
-    <bean id="data" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean" depends-on="deploymentService">
-        <property name="targetObject" ref="deploymentService"/>
-        <property name="targetMethod" value="addListener"/>
-        <property name="arguments">
-            <list>
-                <ref bean="runtimeDataService"/>
-            </list>
-        </property>
-    </bean>
-
-    <bean id="processService" class="org.jbpm.kie.services.impl.ProcessServiceImpl" depends-on="deploymentService">
+    <bean id="processService" class="org.jbpm.kie.services.impl.ProcessServiceImpl">
         <property name="dataService" ref="runtimeDataService"/>
         <property name="deploymentService" ref="deploymentService"/>
     </bean>
 
-    <bean id="userTaskService" class="org.jbpm.kie.services.impl.UserTaskServiceImpl" depends-on="deploymentService">
+    <bean id="userTaskService" class="org.jbpm.kie.services.impl.UserTaskServiceImpl">
         <property name="dataService" ref="runtimeDataService"/>
         <property name="deploymentService" ref="deploymentService"/>
     </bean>
@@ -83,5 +88,4 @@
     <bean id="syncInvoker" class="org.jbpm.kie.services.impl.store.DeploymentSyncInvoker" init-method="start" destroy-method="stop">
         <constructor-arg name="synchronizer" ref="deploymentSync"/>
     </bean>
-
 </beans>
