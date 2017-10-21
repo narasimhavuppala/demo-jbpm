@@ -3,10 +3,9 @@ package com.codegans.demo.jbpm.model;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.Entity;
-import javax.persistence.Id;
-import java.io.Serializable;
+import javax.persistence.OneToMany;
 import java.time.LocalDateTime;
-import java.util.UUID;
+import java.util.Set;
 
 /**
  * JavaDoc here
@@ -15,34 +14,34 @@ import java.util.UUID;
  * @since 20/10/2017 15:41
  */
 @Entity
-public class BusinessTransaction implements Serializable {
-    @Id
-    private UUID id;
-
+public class Anomaly extends BaseEntity {
+    private Long taskId;
     @CreatedDate
     private LocalDateTime dateTime;
-
+    @OneToMany
+    private Set<Comment> comments;
     private boolean treated;
 
-    public BusinessTransaction() {
+    public Anomaly() {
     }
 
-    public BusinessTransaction(UUID id) {
-        this(id, LocalDateTime.now(), false);
+    public Anomaly(LocalDateTime dateTime, boolean treated) {
+        this(null, dateTime, treated);
     }
 
-    public BusinessTransaction(UUID id, LocalDateTime dateTime, boolean treated) {
-        this.id = id;
+    public Anomaly(Long id, LocalDateTime dateTime, boolean treated) {
+        super(id)
+        ;
         this.dateTime = dateTime;
         this.treated = treated;
     }
 
-    public UUID getId() {
-        return id;
+    public Long getTaskId() {
+        return taskId;
     }
 
-    public void setId(UUID id) {
-        this.id = id;
+    public void setTaskId(Long taskId) {
+        this.taskId = taskId;
     }
 
     public LocalDateTime getDateTime() {
@@ -51,6 +50,14 @@ public class BusinessTransaction implements Serializable {
 
     public void setDateTime(LocalDateTime dateTime) {
         this.dateTime = dateTime;
+    }
+
+    public Set<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(Set<Comment> comments) {
+        this.comments = comments;
     }
 
     public boolean isTreated() {

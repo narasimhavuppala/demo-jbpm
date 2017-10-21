@@ -1,6 +1,6 @@
 package com.codegans.demo.jbpm.repository;
 
-import com.codegans.demo.jbpm.model.BusinessTransaction;
+import com.codegans.demo.jbpm.model.Anomaly;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -15,7 +15,7 @@ import java.util.UUID;
  * @since 20/10/2017 17:08
  */
 @Repository
-public interface BusinessTransactionRepository extends JpaRepository<BusinessTransaction, UUID> {
-    @Query("from BusinessTransaction where treated = false")
-    List<BusinessTransaction> findAllNotTreated();
+public interface AnomalyRepository extends JpaRepository<Anomaly, Long> {
+    @Query("from Anomaly where treated = false")
+    List<Anomaly> findAllNotTreated();
 }

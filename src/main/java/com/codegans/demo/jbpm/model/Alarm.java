@@ -1,10 +1,9 @@
 package com.codegans.demo.jbpm.model;
 
 import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import java.io.Serializable;
-import java.util.UUID;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import java.util.Set;
 
 /**
  * JavaDoc here
@@ -13,36 +12,44 @@ import java.util.UUID;
  * @since 20/10/2017 16:40
  */
 @Entity
-public class Alarm implements Serializable {
-    @Id
-    private UUID id;
+public class Alarm extends BaseEntity {
+    private Long taskId;
+    @OneToOne
+    private Anomaly transaction;
+    @OneToMany
+    private Set<Comment> comments;
 
-    @ManyToOne
-    private BusinessTransaction transaction;
-
-    private String description;
-
-    public UUID getId() {
-        return id;
+    public Alarm() {
     }
 
-    public void setId(UUID id) {
-        this.id = id;
+    public Alarm(Long id, Long taskId, Anomaly transaction, Set<Comment> comments) {
+        super(id);
+        this.taskId = taskId;
+        this.transaction = transaction;
+        this.comments = comments;
     }
 
-    public BusinessTransaction getTransaction() {
+    public Long getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(Long taskId) {
+        this.taskId = taskId;
+    }
+
+    public Anomaly getTransaction() {
         return transaction;
     }
 
-    public void setTransaction(BusinessTransaction transaction) {
+    public void setTransaction(Anomaly transaction) {
         this.transaction = transaction;
     }
 
-    public String getDescription() {
-        return description;
+    public Set<Comment> getComments() {
+        return comments;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setComments(Set<Comment> comments) {
+        this.comments = comments;
     }
 }

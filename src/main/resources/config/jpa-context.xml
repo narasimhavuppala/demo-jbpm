@@ -1,22 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:util="http://www.springframework.org/schema/util"
        xmlns="http://www.springframework.org/schema/beans"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
-
-    <bean id="jndiTemplate" class="org.springframework.jndi.JndiTemplate">
-        <constructor-arg type="java.util.Properties">
-            <util:properties location="classpath:jndi.properties"/>
-        </constructor-arg>
-    </bean>
-
-    <bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
-        <property name="jndiTemplate" ref="jndiTemplate"/>
-        <property name="jndiName" value="java:comp/env/jdbc/jbpm"/>
-        <property name="lookupOnStartup" value="false"/>
-        <property name="expectedType" value="javax.sql.DataSource"/>
-    </bean>
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
         <constructor-arg ref="entityManagerFactory"/>
@@ -27,6 +12,7 @@
         <property name="persistenceXmlLocation" value="classpath:/META-INF/jbpm-persistence.xml"/>
         <property name="dataSource" ref="dataSource"/>
         <property name="persistenceUnitName" value="org.jbpm.persistence.jpa"/>
+        <property name="packagesToScan" value="com.codegans.demo.jbpm.model"/>
         <property name="jpaDialect">
             <bean class="org.springframework.orm.jpa.vendor.HibernateJpaDialect"/>
         </property>

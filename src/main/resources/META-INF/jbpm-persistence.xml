@@ -11,9 +11,6 @@
         <mapping-file>META-INF/Taskorm.xml</mapping-file>
         <mapping-file>META-INF/TaskAuditorm.xml</mapping-file>
 
-        <class>com.codegans.demo.jbpm.model.Alarm</class>
-        <class>com.codegans.demo.jbpm.model.BusinessTransaction</class>
-
         <class>org.jbpm.persistence.processinstance.ProcessInstanceInfo</class>
         <class>org.drools.persistence.info.SessionInfo</class>
         <class>org.drools.persistence.info.WorkItemInfo</class>
