@@ -12,12 +12,13 @@
     <bean id="runtimeManagerFactory" class="org.kie.spring.manager.SpringRuntimeManagerFactoryImpl">
         <property name="transactionManager" ref="transactionManager"/>
         <property name="userGroupCallback" ref="userGroupCallback"/>
+        <!--<property name="entityManager" ref="entityManager"/>-->
+        <!--<property name="pessimisticLocking" value="true"/>-->
     </bean>
 
-    <bean id="runtimeManager" class="org.kie.spring.factorybeans.RuntimeManagerFactoryBean" destroy-method="close">
-        <property name="type" value="PER_REQUEST"/>
-        <property name="identifier" value="spring-rm"/>
-        <property name="runtimeEnvironment" ref="runtimeEnvironment"/>
+    <bean id="runtimeManager" factory-bean="runtimeManagerFactory" factory-method="newPerRequestRuntimeManager" destroy-method="close">
+        <constructor-arg type="org.kie.api.runtime.manager.RuntimeEnvironment" ref="runtimeEnvironment"/>
+        <constructor-arg value="spring-rm"/>
     </bean>
 
     <bean id="logService" class="org.jbpm.process.audit.JPAAuditLogService">
@@ -29,7 +30,7 @@
 
     <bean id="taskService" class="org.kie.spring.factorybeans.TaskServiceFactoryBean" destroy-method="close">
         <property name="entityManagerFactory" ref="entityManagerFactory"/>
-        <property name="entityManager" ref="entityManager"/>
+        <!--<property name="entityManager" ref="entityManager"/>-->
         <property name="transactionManager" ref="transactionManager"/>
         <property name="userGroupCallback" ref="userGroupCallback"/>
         <property name="listeners">

@@ -20,9 +20,22 @@ public class BusinessTransaction implements Serializable {
     private UUID id;
 
     @CreatedDate
-    private LocalDateTime dateTime = LocalDateTime.now();
+    private LocalDateTime dateTime;
 
-    private Boolean treated = Boolean.FALSE;
+    private boolean treated;
+
+    public BusinessTransaction() {
+    }
+
+    public BusinessTransaction(UUID id) {
+        this(id, LocalDateTime.now(), false);
+    }
+
+    public BusinessTransaction(UUID id, LocalDateTime dateTime, boolean treated) {
+        this.id = id;
+        this.dateTime = dateTime;
+        this.treated = treated;
+    }
 
     public UUID getId() {
         return id;

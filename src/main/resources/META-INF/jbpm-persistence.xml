@@ -5,7 +5,6 @@
 
     <persistence-unit name="org.jbpm.persistence.jpa" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <non-jta-data-source>java:comp/env/jdbc/jbpm</non-jta-data-source>
         
         <mapping-file>META-INF/Servicesorm.xml</mapping-file>
         <mapping-file>META-INF/JBPMorm.xml</mapping-file>
@@ -77,5 +76,4 @@
             <!--<property name="hibernate.transaction.jta.platform" value="org.hibernate.service.jta.platform.internal.JBossStandAloneJtaPlatform"/>-->
         </properties>
     </persistence-unit>
-
 </persistence>

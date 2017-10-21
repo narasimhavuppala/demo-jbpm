@@ -18,21 +18,17 @@
         <property name="expectedType" value="javax.sql.DataSource"/>
     </bean>
 
-    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <constructor-arg ref="dataSource"/>
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <constructor-arg ref="entityManagerFactory"/>
+        <property name="dataSource" ref="dataSource"/>
     </bean>
-<!--
-    <bean id="narayanaTransactionManager" class="com.arjuna.ats.jta.TransactionManager" factory-method="transactionManager"/>
-
-    <bean id="transactionManager" class="org.springframework.transaction.jta.JtaTransactionManager">
-        <constructor-arg type="javax.transaction.TransactionManager" ref="narayanaTransactionManager"/>
-    </bean>
--->
 
     <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
         <property name="persistenceXmlLocation" value="classpath:/META-INF/jbpm-persistence.xml"/>
         <property name="dataSource" ref="dataSource"/>
+        <property name="persistenceUnitName" value="org.jbpm.persistence.jpa"/>
+        <property name="jpaDialect">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaDialect"/>
+        </property>
     </bean>
-
-    <bean id="entityManager" factory-bean="entityManagerFactory" factory-method="createEntityManager"/>
 </beans>

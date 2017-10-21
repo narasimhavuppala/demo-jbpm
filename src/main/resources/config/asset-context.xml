@@ -20,7 +20,7 @@
 
     <bean id="runtimeEnvironment" class="org.kie.spring.factorybeans.RuntimeEnvironmentFactoryBean">
         <property name="type" value="DEFAULT"/>
-        <property name="entityManager" ref="entityManager"/>
+        <!--<property name="entityManager" ref="entityManager"/>-->
         <property name="entityManagerFactory" ref="entityManagerFactory"/>
         <property name="transactionManager" ref="transactionManager"/>
         <property name="assets">

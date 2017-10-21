@@ -5,31 +5,28 @@ import org.apache.catalina.startup.Tomcat;
 import org.apache.tomcat.util.descriptor.web.ContextResource;
 import org.drools.core.impl.EnvironmentFactory;
 import org.drools.persistence.api.TransactionManager;
-import org.jbpm.kie.services.impl.AbstractDeploymentService;
-import org.jbpm.services.api.DeploymentEventListener;
 import org.kie.api.runtime.Environment;
 import org.kie.api.runtime.EnvironmentName;
 import org.kie.spring.persistence.KieSpringTransactionManagerFactory;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainer;
 import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ImportResource;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
-import java.util.Collection;
 
-@EnableAutoConfiguration(exclude = {HibernateJpaAutoConfiguration.class})
+//@EnableAutoConfiguration(exclude = {HibernateJpaAutoConfiguration.class})
 @ImportResource(value = {
         "classpath:config/jpa-context.xml",
         "classpath:config/jbpm-context.xml",
         "classpath:config/security-context.xml",
         "classpath:config/asset-context.xml"
 })
+@EnableJpaRepositories
 @SpringBootApplication
 public class DemoJbpmApplication {
     public static void main(String[] args) {
@@ -64,6 +61,11 @@ public class DemoJbpmApplication {
         };
     }
 
+//    @Bean
+//    public EntityManager entityManager(EntityManagerFactory entityManagerFactory) {
+//        return entityManagerFactory.createEntityManager();
+//    }
+
     @Bean
     public Environment kieEnvironment() {
         return EnvironmentFactory.newEnvironment();
@@ -74,14 +76,5 @@ public class DemoJbpmApplication {
         environment.set(EnvironmentName.TRANSACTION_MANAGER, transactionManager);
 
         return KieSpringTransactionManagerFactory.get().newTransactionManager(environment);
-    }
-
-    @Bean
-    public String addListener(AbstractDeploymentService deploymentService, Collection<DeploymentEventListener> listeners) {
-        for (DeploymentEventListener listener : listeners) {
-            deploymentService.addListener(listener);
-        }
-
-        return null;
     }
 }
