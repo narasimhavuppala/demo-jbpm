@@ -1,4 +1,4 @@
-package com.codegans.demo.jbpm;
+package com.codegans.demo.jbpm.rest;
 
 import org.jbpm.services.api.RuntimeDataService;
 import org.jbpm.services.api.model.ProcessDefinition;

@@ -1,4 +1,4 @@
-package com.codegans.demo.jbpm;
+package com.codegans.demo.jbpm.rest;
 
 import com.codegans.demo.jbpm.model.Alarm;
 import com.codegans.demo.jbpm.repository.AlarmRepository;
