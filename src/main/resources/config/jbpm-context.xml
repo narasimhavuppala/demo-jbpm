@@ -7,24 +7,7 @@
     <bean id="userGroupCallback" class="org.jbpm.services.task.identity.JBossUserGroupCallbackImpl">
         <constructor-arg name="userGroups" ref="roleProperties"/>
     </bean>
-
-    <bean id="ticketProcess" factory-method="newClassPathResource" class="org.kie.internal.io.ResourceFactory">
-        <constructor-arg value="bpmn/anomaly2case.bpmn2.xml"/>
-    </bean>
-
-    <bean id="runtimeEnvironment" class="org.kie.spring.factorybeans.RuntimeEnvironmentFactoryBean">
-        <property name="type" value="DEFAULT"/>
-        <property name="entityManagerFactory" ref="entityManagerFactory"/>
-        <property name="transactionManager" ref="transactionManager"/>
-        <property name="assets">
-            <map>
-                <entry key-ref="ticketProcess">
-                    <util:constant static-field="org.kie.api.io.ResourceType.BPMN2"/>
-                </entry>
-            </map>
-        </property>
-    </bean>
-
+    
     <bean id="definitionService" class="org.jbpm.kie.services.impl.bpmn2.BPMN2DataServiceImpl"/>
 
     <bean id="runtimeManagerFactory" class="org.kie.spring.manager.SpringRuntimeManagerFactoryImpl">
@@ -32,7 +15,7 @@
         <property name="userGroupCallback" ref="userGroupCallback"/>
     </bean>
 
-    <bean id="runtimeManager" factory-bean="runtimeManagerFactory" factory-method="newPerRequestRuntimeManager" destroy-method="close">
+    <bean id="runtimeManager" factory-bean="runtimeManagerFactory" factory-method="newPerProcessInstanceRuntimeManager" destroy-method="close">
         <constructor-arg type="org.kie.api.runtime.manager.RuntimeEnvironment" ref="runtimeEnvironment"/>
         <constructor-arg value="spring-rm"/>
     </bean>
@@ -46,7 +29,6 @@
 
     <bean id="taskService" class="org.kie.spring.factorybeans.TaskServiceFactoryBean" destroy-method="close">
         <property name="entityManagerFactory" ref="entityManagerFactory"/>
-        <!--<property name="entityManager" ref="entityManager"/>-->
         <property name="transactionManager" ref="transactionManager"/>
         <property name="userGroupCallback" ref="userGroupCallback"/>
         <property name="listeners">

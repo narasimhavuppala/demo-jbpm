@@ -5,7 +5,6 @@
 
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
         <constructor-arg ref="entityManagerFactory"/>
-        <property name="dataSource" ref="dataSource"/>
     </bean>
 
     <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
